@@ -9,7 +9,12 @@ class NewsLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => NewsCubit(),
+      create: (BuildContext context) {
+        return NewsCubit()
+          ..getBusinessData()
+          ..getSportsData()
+          ..getScienceData();
+      },
       child: BlocConsumer<NewsCubit, NewsStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -33,20 +38,6 @@ class NewsLayout extends StatelessWidget {
                 cubit.changeBottomNav(index);
               },
               items: cubit.bottomItems,
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                DioHelper.getData('v2/top-headlines', {
-                  'country': 'us',
-                  'category': 'business',
-                  'apiKey': 'e5fc4a3f6b7345d1b3f6b50091628c1b'
-                }).then((value) {
-                  print(value.data.toString());
-                }).catchError((error) {
-                  print('Error: $error');
-                });
-              },
-              child: Icon(Icons.add),
             ),
             body: cubit.screens[cubit.currentIndex],
           );

@@ -25,6 +25,10 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.deepOrange,
             foregroundColor: Colors.white,
           ),
+          primarySwatch: Colors.deepOrange,
+          progressIndicatorTheme: const ProgressIndicatorThemeData(
+            color: Colors.deepOrange,
+          ),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
@@ -54,7 +58,8 @@ class MyApp extends StatelessWidget {
           )),
       themeMode: ThemeMode.light,
       darkTheme: ThemeData(scaffoldBackgroundColor: Colors.black),
-      home: NewsLayout(),
+      home:
+          Directionality(textDirection: TextDirection.rtl, child: NewsLayout()),
       debugShowCheckedModeBanner: false,
     );
   }
