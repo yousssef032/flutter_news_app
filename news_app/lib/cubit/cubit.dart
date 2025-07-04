@@ -17,7 +17,7 @@ class NewsCubit extends Cubit<NewsStates> {
     BusinessScreen(),
     ScienceScreen(),
     SportsScreen(),
-    SettingsScreen()
+    // SettingsScreen()
   ];
   List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Business'),
@@ -28,6 +28,8 @@ class NewsCubit extends Cubit<NewsStates> {
   List<dynamic> business = [];
   List<dynamic> sports = [];
   List<dynamic> science = [];
+  List<dynamic> search = [];
+
   void changeBottomNav(int index) {
     currentIndex = index;
     emit(NewsBottomNavState());
@@ -75,6 +77,18 @@ class NewsCubit extends Cubit<NewsStates> {
     }).catchError((error) {
       print('Error: $error');
       emit(NewsGetScienceErrorState(error.toString()));
+    });
+  }
+
+  void getSearch(String value) {
+    emit(NewsGetSearchLoadingState());
+    DioHelper.getData('v2/everything', {'q': value, 'apiKey': apiKey})
+        .then((value) {
+      search = value.data['articles'];
+      emit(NewsGetSearchSuccessState());
+    }).catchError((error) {
+      print('Error: $error');
+      emit(NewsGetSearchErrorState(error.toString()));
     });
   }
 }

@@ -26,10 +26,7 @@ Widget buildArticleItem(article, context) => Padding(
               children: [
                 Text(
                   article['title'] ?? 'No Title',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -38,6 +35,7 @@ Widget buildArticleItem(article, context) => Padding(
                   article['publishedAt'] ?? 'No Date',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -66,4 +64,45 @@ articleBuilder(list, context) {
       itemCount: list.length,
     );
   }
+}
+
+Widget defaultFormField({
+  required TextEditingController controller,
+  required TextInputType type,
+  required String label,
+  required IconData prefix,
+  Function(String)? onSubmit,
+  Function(String)? onChange,
+  Function()? onTap,
+  bool isPassword = false,
+  IconData? suffix,
+  Function()? suffixPressed,
+  String? Function(String?)? validate,
+  bool isClickable = true,
+}) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: type,
+    obscureText: isPassword,
+    onFieldSubmitted: onSubmit,
+    onChanged: onChange,
+    onTap: onTap,
+    enabled: isClickable,
+    validator: validate,
+    decoration: InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(prefix),
+      suffixIcon: suffix != null
+          ? IconButton(icon: Icon(suffix), onPressed: suffixPressed)
+          : null,
+      border: OutlineInputBorder(),
+    ),
+  );
+}
+
+void navigateTo(context, widget) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => widget),
+  );
 }
