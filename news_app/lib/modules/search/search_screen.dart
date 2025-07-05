@@ -14,28 +14,57 @@ class SearchScreen extends StatelessWidget {
       builder: (context, state) {
         var list = NewsCubit.get(context).search;
         return Scaffold(
-          appBar: AppBar(),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: defaultFormField(
-                  onChange: (value) {
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            titleSpacing: 0.0,
+            title: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[850]
+                      : Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: TextFormField(
+                  controller: searchController,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white54
+                          : Colors.grey,
+                    ),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none, // Removes orange border
+                    enabledBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 8),
+                  ),
+                  onChanged: (value) {
                     NewsCubit.get(context).getSearch(value);
                   },
-                  controller: searchController,
-                  type: TextInputType.text,
-                  validate: (value) {
-                    if (value!.isEmpty) {
-                      return 'Search must not be empty';
-                    }
-                    return null;
-                  },
-                  label: 'search',
-                  prefix: Icons.search,
                 ),
               ),
-              Expanded(child: articleBuilder(list, context))
+            ),
+            // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+          ),
+          body: Column(
+            children: [
+              Expanded(child: articleBuilder(list, context, isSearch: true)),
             ],
           ),
         );

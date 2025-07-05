@@ -23,7 +23,7 @@ class NewsCubit extends Cubit<NewsStates> {
     BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Business'),
     BottomNavigationBarItem(icon: Icon(Icons.science), label: 'Science'),
     BottomNavigationBarItem(icon: Icon(Icons.sports), label: 'Sports'),
-    BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+    // BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
   ];
   List<dynamic> business = [];
   List<dynamic> sports = [];
@@ -81,6 +81,7 @@ class NewsCubit extends Cubit<NewsStates> {
   }
 
   void getSearch(String value) {
+    search = [];
     emit(NewsGetSearchLoadingState());
     DioHelper.getData('v2/everything', {'q': value, 'apiKey': apiKey})
         .then((value) {

@@ -1,46 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/modules/web_view/web_view_screen.dart';
+import 'package:news_app/network/local/cache_helper.dart';
 
-Widget buildArticleItem(article, context) => Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        children: [
-          Container(
-            width: 120.0,
-            height: 120.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              image: DecorationImage(
-                image: NetworkImage(
-                  article['urlToImage']?.isNotEmpty == true
-                      ? article['urlToImage']
-                      : 'https://tse1.mm.bing.net/th/id/OIP.TdX9D7lAgnLjiFIgHvflfAHaHa?pid=Api&P=0&h=220', // default image
+Widget buildArticleItem(
+  article,
+  context,
+) =>
+    InkWell(
+      onTap: () => navigateTo(context, WebViewScreen(article['url'])),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          children: [
+            Container(
+              width: 120.0,
+              height: 120.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    article['urlToImage']?.isNotEmpty == true
+                        ? article['urlToImage']
+                        : 'https://tse1.mm.bing.net/th/id/OIP.TdX9D7lAgnLjiFIgHvflfAHaHa?pid=Api&P=0&h=220', // default image
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                fit: BoxFit.cover,
               ),
             ),
-          ),
-          SizedBox(width: 20.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  article['title'] ?? 'No Title',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 10.0),
-                Text(
-                  article['publishedAt'] ?? 'No Date',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+            SizedBox(width: 20.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    article['title'] ?? 'No Title',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    (article['publishedAt'] != null &&
+                            article['publishedAt'].contains('T'))
+                        ? article['publishedAt'].split('T')[0]
+                        : (article['publishedAt'] ?? 'No Date'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 
@@ -53,8 +65,10 @@ Widget myDivider() => Padding(
       ),
     );
 
-articleBuilder(list, context) {
-  if (list.isEmpty) {
+articleBuilder(list, context, {isSearch = false}) {
+  if (isSearch && list.isEmpty) {
+    return Container();
+  } else if (list.isEmpty) {
     return Center(child: CircularProgressIndicator());
   } else {
     return ListView.separated(
